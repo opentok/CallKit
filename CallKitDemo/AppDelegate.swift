@@ -30,6 +30,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        guard let handle = url.startCallHandle else {return false}
+        callManager.startCall(handle: handle)
+        return true
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        guard let handle = userActivity.startCallHandle else {return false}
+        callManager.startCall(handle: handle)
+        return true
+    }
 }
 
 extension AppDelegate: PKPushRegistryDelegate {

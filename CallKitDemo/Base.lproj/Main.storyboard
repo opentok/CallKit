@@ -22,16 +22,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M5B-6m-yHD">
-                                <rect key="frame" x="152" y="318.5" width="71" height="30"/>
+                                <rect key="frame" x="119" y="318.5" width="138" height="30"/>
+                                <state key="normal" title="Receive a call Lucas"/>
+                                <connections>
+                                    <action selector="receiveCallLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HIN-Hy-5D6"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EWj-Lg-VlD">
+                                <rect key="frame" x="152" y="356" width="71" height="30"/>
                                 <state key="normal" title="Call Lucas"/>
                                 <connections>
-                                    <action selector="callLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="0Qp-i6-uM6"/>
+                                    <action selector="callLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="29a-eD-i3B"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="EWj-Lg-VlD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VRe-9r-LCv"/>
                             <constraint firstItem="M5B-6m-yHD" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="WLR-HC-Lan"/>
+                            <constraint firstItem="EWj-Lg-VlD" firstAttribute="top" secondItem="M5B-6m-yHD" secondAttribute="bottom" constant="8" id="g3J-hc-Yre"/>
                             <constraint firstItem="M5B-6m-yHD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xqJ-34-c0b"/>
                         </constraints>
                     </view>

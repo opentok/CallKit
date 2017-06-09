@@ -96,6 +96,7 @@ final class SpeakerboxCall {
         // Simulate the call starting successfully
         completion?(true)
 
+        // FIXME
         /*
             Simulate the "started connecting" and "connected" states using artificial delays, since
             the example app is not backed by a real network service

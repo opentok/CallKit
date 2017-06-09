@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBAction func callLucas(_ sender: Any) {
+    @IBAction func receiveCallLucas(_ sender: Any) {
         guard let appdelegate = UIApplication.shared.delegate as? AppDelegate else {
             
             print("appdelegate is missing")
@@ -20,5 +20,16 @@ class ViewController: UIViewController {
 //        appdelegate.callManager.startCall(handle: "Jane Appleseed")
         
         appdelegate.displayIncomingCall(uuid: UUID(), handle: "Jane Appleseed")
+    }
+    
+    
+    @IBAction func callLucas(_ sender: Any) {
+        guard let appdelegate = UIApplication.shared.delegate as? AppDelegate else {
+            
+            print("appdelegate is missing")
+            return
+        }
+        
+        appdelegate.callManager.startCall(handle: "Jane Appleseed")
     }
 }
