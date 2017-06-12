@@ -10,11 +10,15 @@ import Foundation
 import UIKit
 import CallKit
 import AVFoundation
+import OpenTok
 
 final class ProviderDelegate: NSObject, CXProviderDelegate {
 
     let callManager: SpeakerboxCallManager
     private let provider: CXProvider
+    var session: OTSession?
+    var publisher: OTPublisher?
+    var subscriber: OTSubscriber?
 
     init(callManager: SpeakerboxCallManager) {
         self.callManager = callManager
@@ -23,6 +27,8 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         super.init()
 
         provider.setDelegate(self, queue: nil)
+        
+        session = OTSession(apiKey: "45625732", sessionId: "1_MX40NTYyNTczMn5-MTQ5NzA0ODMzNjgzMX52ZUNjTk4zbmtZbG8wN1p4a2g4amZOQVB-fg", delegate: self)
     }
 
     /// The app's provider configuration, representing its CallKit capabilities
@@ -129,6 +135,8 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         }
     }
 
+    var call: SpeakerboxCall?
+    var action: CXAnswerCallAction?
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
         guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
@@ -142,12 +150,20 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             the audio session has been activated by the system after having its priority elevated.
          */
 //        configureAudioSession()
+        
+        var error: OTError?
+        session?.connect(withToken: "T1==cGFydG5lcl9pZD00NTYyNTczMiZzZGtfdmVyc2lvbj10YnBocC12MC45MS4yMDExLTA3LTA1JnNpZz0yY2FkNGYxYmU2YmY4MmRkMzQ0MWMyZjRkNWMxYWUyZmJhZTMzNTBmOnNlc3Npb25faWQ9MV9NWDQwTlRZeU5UY3pNbjUtTVRRNU56QTBPRE16Tmpnek1YNTJaVU5qVGs0emJtdFpiRzh3TjFwNGEyZzRhbVpPUVZCLWZnJmNyZWF0ZV90aW1lPTE0OTczMDAzNTUmcm9sZT1tb2RlcmF0b3Imbm9uY2U9MTQ5NzMwMDM1NS45NTg3MTYyMzQwMjA4OCZleHBpcmVfdGltZT0xNDk5ODkyMzU1", error: &error)
+        if error != nil {
+            print(error!)
+        }
 
         // Trigger the call to be answered via the underlying network service.
-        call.answerSpeakerboxCall()
+//        call.answerSpeakerboxCall()
+        self.call = call
 
         // Signal to the system that the action has been successfully performed.
-        action.fulfill()
+//        action.fulfill()
+        self.action = action
     }
 
     
@@ -160,6 +176,21 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
 
         // Stop call audio whenever ending the call.
 //        stopAudio()
+        if let publisher = publisher {
+            var error: OTError?
+            session?.unpublish(publisher, error: &error)
+            if error != nil {
+                print(error!)
+            }
+        }
+        
+        if let subscriber = subscriber {
+            var error: OTError?
+            session?.unsubscribe(subscriber, error: &error)
+            if error != nil {
+                print(error!)
+            }
+        }
 
         // Trigger the call to be ended via the underlying network service.
         call.endSpeakerboxCall()
@@ -172,48 +203,124 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     }
 
     // FIXME
-//    func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
-//        // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
-//        guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
-//            action.fail()
-//            return
-//        }
-//
-//        // Update the SpeakerboxCall's underlying hold state.
-//        call.isOnHold = action.isOnHold
-//
-//        // Stop or start audio in response to holding or unholding the call.
-//        if call.isOnHold {
+    func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
+        // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
+        guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
+            action.fail()
+            return
+        }
+
+        // Update the SpeakerboxCall's underlying hold state.
+        call.isOnHold = action.isOnHold
+
+        // Stop or start audio in response to holding or unholding the call.
+        if call.isOnHold {
 //            stopAudio()
-//        } else {
+            if let publisher = publisher {
+                publisher.publishAudio = false
+            }
+            if let subscriber = subscriber {
+                subscriber.subscribeToAudio = false
+            }
+        } else {
 //            startAudio()
-//        }
-//
-//        // Signal to the system that the action has been successfully performed.
-//        action.fulfill()
-//    }
-//
-//    func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
-//        print("Timed out \(#function)")
-//
-//        // React to the action timeout if necessary, such as showing an error UI.
-//    }
-//
+            if let publisher = publisher {
+                publisher.publishAudio = true
+            }
+            if let subscriber = subscriber {
+                subscriber.subscribeToAudio = true
+            }
+        }
+
+        // Signal to the system that the action has been successfully performed.
+        action.fulfill()
+    }
+
+    func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
+        print("Timed out \(#function)")
+
+        // React to the action timeout if necessary, such as showing an error UI.
+    }
+
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("Received \(#function)")
 
         // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
 //        startAudio()
+        if let publisher = publisher {
+            var error: OTError?
+            session?.publish(publisher, error: &error)
+            if error != nil {
+                print(error!)
+            }
+        }
     }
-//
-//    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-//        print("Received \(#function)")
-//
-//        /*
-//             Restart any non-call related audio now that the app's audio session has been
-//             de-activated after having its priority restored to normal.
-//         */
-//    }
 
+    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
+        print("Received \(#function)")
+
+        /*
+             Restart any non-call related audio now that the app's audio session has been
+             de-activated after having its priority restored to normal.
+         */
+        
+    }
+}
+
+extension ProviderDelegate: OTSessionDelegate {
+    func sessionDidConnect(_ session: OTSession) {
+        print(#function)
+        
+        let settings = OTPublisherSettings()
+        settings.name = UIDevice.current.name
+        settings.audioTrack = true
+        settings.videoTrack = false
+        publisher = OTPublisher.init(delegate: self, settings: settings)
+        
+        self.call?.answerSpeakerboxCall()
+        self.action?.fulfill()
+    }
+    
+    func sessionDidDisconnect(_ session: OTSession){
+        print(#function)
+    }
+    
+    func session(_ session: OTSession, didFailWithError error: OTError) {
+        print(#function, error)
+    }
+    
+    func session(_ session: OTSession, streamCreated stream: OTStream) {
+        print(#function)
+        subscriber = OTSubscriber.init(stream: stream, delegate: self)
+        subscriber?.subscribeToVideo = false
+        if let subscriber = subscriber {
+            var error: OTError?
+            session.subscribe(subscriber, error: &error)
+            if error != nil {
+                print(error!)
+            }
+        }
+    }
+    
+    
+    func session(_ session: OTSession, streamDestroyed stream: OTStream) {
+        print(#function)
+    }
+}
+
+extension ProviderDelegate: OTPublisherDelegate {
+    func publisher(_ publisher: OTPublisherKit, didFailWithError error: OTError) {
+        print(#function)
+    }
+}
+
+extension ProviderDelegate: OTSubscriberDelegate {
+    func subscriberDidConnect(toStream subscriber: OTSubscriberKit) {
+        print(#function)
+    }
+    
+    func subscriber(_ subscriber: OTSubscriberKit, didFailWithError error: OTError) {
+        print(#function)
+    }
 }

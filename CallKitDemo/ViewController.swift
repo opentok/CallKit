@@ -17,8 +17,6 @@ class ViewController: UIViewController {
             return
         }
         
-//        appdelegate.callManager.startCall(handle: "Jane Appleseed")
-        
         appdelegate.displayIncomingCall(uuid: UUID(), handle: "Jane Appleseed")
     }
     
