@@ -248,7 +248,11 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
 //        startAudio()
-        if let publisher = publisher {
+        if let publisher = publisher, let audioDevice = OTDefaultAudioDeviceWithVolumeControl.sharedInstance() {
+            
+            audioDevice.customAudioSession = audioSession
+            OTAudioDeviceManager.setAudioDevice(audioDevice)
+            
             var error: OTError?
             session?.publish(publisher, error: &error)
             if error != nil {
