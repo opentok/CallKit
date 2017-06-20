@@ -114,7 +114,6 @@ static OSStatus playout_cb(void *ref_con,
 }
 
 @synthesize preferredAudioComponentSubtype = _preferredAudioComponentSubtype;
-@synthesize customAudioSession = _customAudioSession;
 
 #pragma mark - OTAudioDeviceImplementation
 
@@ -123,6 +122,7 @@ static OSStatus playout_cb(void *ref_con,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [[OTDefaultAudioDevice alloc] init];
+        [_sharedInstance setupAudioSession];
     });
     return _sharedInstance;
 }
@@ -483,13 +483,11 @@ static bool CheckError(OSStatus error, NSString* function) {
 }
 - (void) setupAudioSession
 {
-    AVAudioSession *mySession;
-    if (_customAudioSession) {
-        mySession = _customAudioSession;
+    if (isAudioSessionSetup) {
+        return;
     }
-    else {
-        mySession = [AVAudioSession sharedInstance];
-    }
+    
+    AVAudioSession *mySession = [AVAudioSession sharedInstance];
     _previousAVAudioSessionCategory = mySession.category;
     avAudioSessionMode = mySession.mode;
     avAudioSessionPreffSampleRate = mySession.preferredSampleRate;

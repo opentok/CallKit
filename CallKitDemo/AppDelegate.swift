@@ -17,13 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let pushRegistry = PKPushRegistry(queue: DispatchQueue.main)
     let callManager = SpeakerboxCallManager()
-    var prodviderDelegate: ProviderDelegate?
+    var providerDelegate: ProviderDelegate?
 
     // Trigger VoIP registration on launch
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         
         
-        prodviderDelegate = ProviderDelegate(callManager: callManager)
+        providerDelegate = ProviderDelegate(callManager: callManager)
         
         pushRegistry.delegate = self
         pushRegistry.desiredPushTypes = [.voIP]
@@ -31,19 +31,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        print(#function)
-        guard let handle = url.startCallHandle else {return false}
-        callManager.startCall(handle: handle)
-        return true
-    }
-    
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
-        print(#function)
-        guard let handle = userActivity.startCallHandle else {return false}
-        callManager.startCall(handle: handle)
-        return true
-    }
+//    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+//        print(#function)
+//        guard let handle = url.startCallHandle else {return false}
+//        callManager.startCall(handle: handle)
+//        return true
+//    }
+//    
+//    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+//        print(#function)
+//        guard let handle = userActivity.startCallHandle else {return false}
+//        callManager.startCall(handle: handle)
+//        return true
+//    }
 }
 
 extension AppDelegate: PKPushRegistryDelegate {
@@ -56,22 +56,26 @@ extension AppDelegate: PKPushRegistryDelegate {
     }
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+        print(UUID())
         print("\(#function) incoming voip notfication: \(payload.dictionaryPayload)")
         if let uuidString = payload.dictionaryPayload["UUID"] as? String,
             let handle = payload.dictionaryPayload["handle"] as? String,
             let uuid = UUID(uuidString: uuidString) {
             
-            displayIncomingCall(uuid: uuid, handle: handle)
+            
+            let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
+            self.displayIncomingCall(uuid: uuid, handle: handle, hasVideo: false) { _ in
+                UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+            }
         }
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
         print("\(#function) token invalidated")
     }
-    
-    func displayIncomingCall(uuid: UUID, handle: String) {
         
-        // Post local notification for incoming call
-        prodviderDelegate?.reportIncomingCall(uuid: uuid, handle: handle)
+    /// Display the incoming call to the user
+    func displayIncomingCall(uuid: UUID, handle: String, hasVideo: Bool = false, completion: ((NSError?) -> Void)? = nil) {
+        providerDelegate?.reportIncomingCall(uuid: uuid, handle: handle, hasVideo: hasVideo, completion: completion)
     }
 }

@@ -36,6 +36,4 @@
  */
 @property (nonatomic) uint32_t preferredAudioComponentSubtype;
 
-@property (nonatomic) AVAudioSession *customAudioSession;
-
 @end
