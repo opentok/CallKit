@@ -7,8 +7,9 @@
 */
 
 import Foundation
+import OpenTok
 
-final class SpeakerboxCall {
+final class SpeakerboxCall: NSObject {
 
     // MARK: Metadata Properties
 
@@ -41,6 +42,12 @@ final class SpeakerboxCall {
             stateDidChange?()
         }
     }
+    
+    var isMuted = false {
+        didSet {
+            publisher?.publishAudio = !isMuted
+        }
+    }
 
     // MARK: State change callback blocks
 
@@ -48,6 +55,7 @@ final class SpeakerboxCall {
     var hasStartedConnectingDidChange: (() -> Void)?
     var hasConnectedDidChange: (() -> Void)?
     var hasEndedDidChange: (() -> Void)?
+    var audioChange: (() -> Void)?
 
     // MARK: Derived Properties
 
@@ -91,39 +99,134 @@ final class SpeakerboxCall {
     }
 
     // MARK: Actions
-
-    func startSpeakerboxCall(completion: ((_ success: Bool) -> Void)?) {
-        // Simulate the call starting successfully
-        completion?(true)
-
-        // FIXME
+    var session: OTSession?
+    var publisher: OTPublisher?
+    var subscriber: OTSubscriber?
+    
+    var startCallCompletion: ((Bool) -> Void)?
+    func startCall(completion: ((_ success: Bool) -> Void)?) {
+        if session == nil {
+            session = OTSession(apiKey: "", sessionId: "", delegate: self)
+        }
+        
+        startCallCompletion = completion
+        
+        var error: OTError?
+        hasStartedConnecting = true
+        session?.connect(withToken: "", error: &error)
+        if error != nil {
+            print(error!)
+        }
+    }
+    
+    var answerCallCompletion: ((Bool) -> Void)?
+    func answerCall(completion: ((_ success: Bool) -> Void)?) {
+        if session == nil {
+            session = OTSession(apiKey: "", sessionId: "", delegate: self)
+        }
+        
+        answerCallCompletion = completion
+        
+        var error: OTError?
+        hasStartedConnecting = true
+        session?.connect(withToken: "", error: &error)
+        if error != nil {
+            print(error!)
+        }
+    }
+    
+    func startAudio() {
+        
+        if publisher == nil {
+            let settings = OTPublisherSettings()
+            settings.name = UIDevice.current.name
+            settings.audioTrack = true
+            settings.videoTrack = false
+            publisher = OTPublisher.init(delegate: self, settings: settings)
+        }
+        
+        var error: OTError?
+        session?.publish(publisher!, error: &error)
+        if error != nil {
+            print(error!)
+        }
+    }
+    
+    func endCall() {
         /*
-            Simulate the "started connecting" and "connected" states using artificial delays, since
-            the example app is not backed by a real network service
+         Simulate the end taking effect immediately, since
+         the example app is not backed by a real network service
          */
-        DispatchQueue.main.asyncAfter(wallDeadline: DispatchWallTime.now() + 3) {
-            self.hasStartedConnecting = true
+        if let publisher = publisher {
+            var error: OTError?
+            session?.unpublish(publisher, error: &error)
+            if error != nil {
+                print(error!)
+            }
+        }
+        publisher = nil
+        
+        if let session = session {
+            var error: OTError?
+            session.disconnect(&error)
+            if error != nil {
+                print(error!)
+            }
+        }
+        session = nil
+        
+        hasEnded = true
+    }
+}
 
-            DispatchQueue.main.asyncAfter(wallDeadline: DispatchWallTime.now() + 1.5) {
-                self.hasConnected = true
+extension SpeakerboxCall: OTSessionDelegate {
+    func sessionDidConnect(_ session: OTSession) {
+        print(#function)
+        
+        hasConnected = true
+        startCallCompletion?(true)
+        answerCallCompletion?(true)
+    }
+    
+    func sessionDidDisconnect(_ session: OTSession) {
+        print(#function)
+    }
+    
+    func session(_ session: OTSession, didFailWithError error: OTError) {
+        print(#function, error)
+    }
+    
+    func session(_ session: OTSession, streamCreated stream: OTStream) {
+        print(#function)
+        subscriber = OTSubscriber.init(stream: stream, delegate: self)
+        subscriber?.subscribeToVideo = false
+        if let subscriber = subscriber {
+            var error: OTError?
+            session.subscribe(subscriber, error: &error)
+            if error != nil {
+                print(error!)
             }
         }
     }
-
-    func answerSpeakerboxCall() {
-        /*
-            Simulate the answer becoming connected immediately, since
-            the example app is not backed by a real network service
-         */
-        hasConnected = true
+    
+    
+    func session(_ session: OTSession, streamDestroyed stream: OTStream) {
+        print(#function)
     }
+}
 
-    func endSpeakerboxCall() {
-        /*
-            Simulate the end taking effect immediately, since
-            the example app is not backed by a real network service
-         */
-        hasEnded = true
+extension SpeakerboxCall: OTPublisherDelegate {
+    func publisher(_ publisher: OTPublisherKit, didFailWithError error: OTError) {
+        print(#function)
     }
+}
 
+extension SpeakerboxCall: OTSubscriberDelegate {
+    func subscriberDidConnect(toStream subscriber: OTSubscriberKit) {
+        print(#function)
+    }
+    
+    func subscriber(_ subscriber: OTSubscriberKit, didFailWithError error: OTError) {
+        print(#function)
+    }
 }

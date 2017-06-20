@@ -20,6 +20,7 @@
 		A062C6291EE5FAA200FD64A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A062C6271EE5FAA200FD64A3 /* Main.storyboard */; };
 		A062C62B1EE5FAA200FD64A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A062C62A1EE5FAA200FD64A3 /* Assets.xcassets */; };
 		A062C62E1EE5FAA200FD64A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A062C62C1EE5FAA200FD64A3 /* LaunchScreen.storyboard */; };
+		A0B080C81EF9BD4D0082691D /* Ringtone.caf in Resources */ = {isa = PBXBuildFile; fileRef = A0B080C71EF9BD4A0082691D /* Ringtone.caf */; };
 		A0F2087A1EEF442E00104C6C /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = A0F208791EEF442E00104C6C /* Podfile */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 		A062C62A1EE5FAA200FD64A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A062C62D1EE5FAA200FD64A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A062C62F1EE5FAA200FD64A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A0B080C71EF9BD4A0082691D /* Ringtone.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ringtone.caf; sourceTree = "<group>"; };
 		A0F208791EEF442E00104C6C /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 		A0F2087B1EEF449800104C6C /* CallKitDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CallKitDemo.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +79,7 @@
 		A062C6221EE5FAA200FD64A3 /* CallKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				A0B080C71EF9BD4A0082691D /* Ringtone.caf */,
 				A005B73D1EF45BE60076B552 /* OTDefaultAudioDevice.h */,
 				A005B73E1EF45BE60076B552 /* OTDefaultAudioDevice.m */,
 				A005B73F1EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.h */,
@@ -168,6 +171,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0B080C81EF9BD4D0082691D /* Ringtone.caf in Resources */,
 				A062C62E1EE5FAA200FD64A3 /* LaunchScreen.storyboard in Resources */,
 				A062C62B1EE5FAA200FD64A3 /* Assets.xcassets in Resources */,
 				A0F2087A1EEF442E00104C6C /* Podfile in Resources */,

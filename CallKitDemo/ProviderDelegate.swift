@@ -10,15 +10,11 @@ import Foundation
 import UIKit
 import CallKit
 import AVFoundation
-import OpenTok
 
 final class ProviderDelegate: NSObject, CXProviderDelegate {
 
     let callManager: SpeakerboxCallManager
     private let provider: CXProvider
-    var session: OTSession?
-    var publisher: OTPublisher?
-    var subscriber: OTSubscriber?
 
     init(callManager: SpeakerboxCallManager) {
         self.callManager = callManager
@@ -27,8 +23,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         super.init()
 
         provider.setDelegate(self, queue: nil)
-        
-        session = OTSession(apiKey: "45625732", sessionId: "1_MX40NTYyNTczMn5-MTQ5NzA0ODMzNjgzMX52ZUNjTk4zbmtZbG8wN1p4a2g4amZOQVB-fg", delegate: self)
     }
 
     /// The app's provider configuration, representing its CallKit capabilities
@@ -36,18 +30,16 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         let localizedName = NSLocalizedString("CallKitDemo", comment: "Name of application")
         let providerConfiguration = CXProviderConfiguration(localizedName: localizedName)
 
-//        providerConfiguration.supportsVideo = true
+        providerConfiguration.supportsVideo = false
 
         providerConfiguration.maximumCallsPerCallGroup = 1
 
         providerConfiguration.supportedHandleTypes = [.phoneNumber]
 
-//        if let iconMaskImage = UIImage(named: "IconMask") {
-//            providerConfiguration.iconTemplateImageData = UIImagePNGRepresentation(iconMaskImage)
-//        }
+        providerConfiguration.iconTemplateImageData = UIImagePNGRepresentation(#imageLiteral(resourceName: "IconMask"))
 
-//        providerConfiguration.ringtoneSound = "Ringtone.caf"
-
+        providerConfiguration.ringtoneSound = "Ringtone.caf"
+        
         return providerConfiguration
     }
 
@@ -60,6 +52,9 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         update.remoteHandle = CXHandle(type: .phoneNumber, value: handle)
         update.hasVideo = hasVideo
 
+        // pre-heat the AVAudioSession
+        OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDeviceWithVolumeControl.sharedInstance())
+        
         // Report the incoming call to the system
         provider.reportNewIncomingCall(with: uuid, update: update) { error in
             /*
@@ -81,22 +76,13 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
 
     func providerDidReset(_ provider: CXProvider) {
         print("Provider did reset")
-
-        // FIXME
-//        stopAudio()
-
         /*
             End any ongoing calls if the provider resets, and remove them from the app's list of calls,
             since they are no longer valid.
          */
-        for call in callManager.calls {
-            call.endSpeakerboxCall()
-        }
-
-        // Remove all calls from the app's list of calls.
-        callManager.removeAllCalls()
     }
 
+    var startCall: SpeakerboxCall?
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         // Create & configure an instance of SpeakerboxCall, the app's model class representing the new outgoing call.
         let call = SpeakerboxCall(uuid: action.callUUID, isOutgoing: true)
@@ -107,8 +93,12 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             Configure the audio session, but do not start call audio here, since it must be done once
             the audio session has been activated by the system after having its priority elevated.
          */
+        // https://forums.developer.apple.com/thread/64544
+        // we can't configure the audio session here for the case of launching it from locked screen
+        // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
 //        configureAudioSession()
-
+        self.startCall = call
+        
         /*
             Set callback blocks for significant events in the call's lifecycle, so that the CXProvider may be updated
             to reflect the updated state.
@@ -121,22 +111,18 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         }
 
         // Trigger the call to be started via the underlying network service.
-        call.startSpeakerboxCall { success in
+        call.startCall { success in
             if success {
-                // Signal to the system that the action has been successfully performed.
                 action.fulfill()
-
-                // Add the new outgoing call to the app's list of calls.
                 self.callManager.addCall(call)
-            } else {
-                // Signal to the system that the action was unable to be performed.
+            }
+            else {
                 action.fail()
             }
         }
     }
 
-    var call: SpeakerboxCall?
-    var action: CXAnswerCallAction?
+    var answerCall: SpeakerboxCall?
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
         guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
@@ -149,21 +135,23 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             Configure the audio session, but do not start call audio here, since it must be done once
             the audio session has been activated by the system after having its priority elevated.
          */
-//        configureAudioSession()
         
-        var error: OTError?
-        session?.connect(withToken: "T1==cGFydG5lcl9pZD00NTYyNTczMiZzZGtfdmVyc2lvbj10YnBocC12MC45MS4yMDExLTA3LTA1JnNpZz0yY2FkNGYxYmU2YmY4MmRkMzQ0MWMyZjRkNWMxYWUyZmJhZTMzNTBmOnNlc3Npb25faWQ9MV9NWDQwTlRZeU5UY3pNbjUtTVRRNU56QTBPRE16Tmpnek1YNTJaVU5qVGs0emJtdFpiRzh3TjFwNGEyZzRhbVpPUVZCLWZnJmNyZWF0ZV90aW1lPTE0OTczMDAzNTUmcm9sZT1tb2RlcmF0b3Imbm9uY2U9MTQ5NzMwMDM1NS45NTg3MTYyMzQwMjA4OCZleHBpcmVfdGltZT0xNDk5ODkyMzU1", error: &error)
-        if error != nil {
-            print(error!)
-        }
+        // https://forums.developer.apple.com/thread/64544
+        // we can't configure the audio session here for the case of launching it from locked screen
+        // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
+//        configureAudioSession()
 
         // Trigger the call to be answered via the underlying network service.
-//        call.answerSpeakerboxCall()
-        self.call = call
-
-        // Signal to the system that the action has been successfully performed.
-//        action.fulfill()
-        self.action = action
+        self.answerCall = call
+        
+        call.answerCall { success in
+            if success {
+                action.fulfill()
+            }
+            else {
+                action.fail()
+            }
+        }
     }
 
     
@@ -174,26 +162,8 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             return
         }
 
-        // Stop call audio whenever ending the call.
-//        stopAudio()
-        if let publisher = publisher {
-            var error: OTError?
-            session?.unpublish(publisher, error: &error)
-            if error != nil {
-                print(error!)
-            }
-        }
-        
-        if let subscriber = subscriber {
-            var error: OTError?
-            session?.unsubscribe(subscriber, error: &error)
-            if error != nil {
-                print(error!)
-            }
-        }
-
         // Trigger the call to be ended via the underlying network service.
-        call.endSpeakerboxCall()
+        call.endCall()
 
         // Signal to the system that the action has been successfully performed.
         action.fulfill()
@@ -214,24 +184,21 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         call.isOnHold = action.isOnHold
 
         // Stop or start audio in response to holding or unholding the call.
-        if call.isOnHold {
-//            stopAudio()
-            if let publisher = publisher {
-                publisher.publishAudio = false
-            }
-            if let subscriber = subscriber {
-                subscriber.subscribeToAudio = false
-            }
-        } else {
-//            startAudio()
-            if let publisher = publisher {
-                publisher.publishAudio = true
-            }
-            if let subscriber = subscriber {
-                subscriber.subscribeToAudio = true
-            }
-        }
+        call.isMuted = call.isOnHold
 
+        // Signal to the system that the action has been successfully performed.
+        action.fulfill()
+    }
+    
+    func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
+        // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
+        guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
+            action.fail()
+            return
+        }
+        
+        call.isMuted = action.isMuted
+        
         // Signal to the system that the action has been successfully performed.
         action.fulfill()
     }
@@ -244,17 +211,11 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("Received \(#function)")
-
+        
         // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
-//        startAudio()
-        if let publisher = publisher {
-            var error: OTError?
-            session?.publish(publisher, error: &error)
-            if error != nil {
-                print(error!)
-            }
-        }
+        startCall?.startAudio()
+        answerCall?.startAudio()
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
@@ -264,63 +225,8 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
              Restart any non-call related audio now that the app's audio session has been
              de-activated after having its priority restored to normal.
          */
-        
-    }
-}
-
-extension ProviderDelegate: OTSessionDelegate {
-    func sessionDidConnect(_ session: OTSession) {
-        print(#function)
-        
-        let settings = OTPublisherSettings()
-        settings.name = UIDevice.current.name
-        settings.audioTrack = true
-        settings.videoTrack = false
-        publisher = OTPublisher.init(delegate: self, settings: settings)
-        
-        self.call?.answerSpeakerboxCall()
-        self.action?.fulfill()
-    }
-    
-    func sessionDidDisconnect(_ session: OTSession){
-        print(#function)
-    }
-    
-    func session(_ session: OTSession, didFailWithError error: OTError) {
-        print(#function, error)
-    }
-    
-    func session(_ session: OTSession, streamCreated stream: OTStream) {
-        print(#function)
-        subscriber = OTSubscriber.init(stream: stream, delegate: self)
-        subscriber?.subscribeToVideo = false
-        if let subscriber = subscriber {
-            var error: OTError?
-            session.subscribe(subscriber, error: &error)
-            if error != nil {
-                print(error!)
-            }
-        }
-    }
-    
-    
-    func session(_ session: OTSession, streamDestroyed stream: OTStream) {
-        print(#function)
-    }
-}
-
-extension ProviderDelegate: OTPublisherDelegate {
-    func publisher(_ publisher: OTPublisherKit, didFailWithError error: OTError) {
-        print(#function)
-    }
-}
-
-extension ProviderDelegate: OTSubscriberDelegate {
-    func subscriberDidConnect(toStream subscriber: OTSubscriberKit) {
-        print(#function)
-    }
-    
-    func subscriber(_ subscriber: OTSubscriberKit, didFailWithError error: OTError) {
-        print(#function)
+        startCall?.endCall()
+        answerCall?.endCall()
+        callManager.removeAllCalls()
     }
 }

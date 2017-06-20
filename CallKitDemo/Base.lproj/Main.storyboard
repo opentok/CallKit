@@ -35,12 +35,23 @@
                                     <action selector="callLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="29a-eD-i3B"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kUw-TJ-83h">
+                                <rect key="frame" x="162" y="394" width="52" height="30"/>
+                                <state key="normal" title="EndCall">
+                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="endCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xQ9-tY-vM1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="EWj-Lg-VlD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VRe-9r-LCv"/>
                             <constraint firstItem="M5B-6m-yHD" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="WLR-HC-Lan"/>
                             <constraint firstItem="EWj-Lg-VlD" firstAttribute="top" secondItem="M5B-6m-yHD" secondAttribute="bottom" constant="8" id="g3J-hc-Yre"/>
+                            <constraint firstItem="kUw-TJ-83h" firstAttribute="top" secondItem="EWj-Lg-VlD" secondAttribute="bottom" constant="8" id="p9U-ZN-Go7"/>
+                            <constraint firstItem="kUw-TJ-83h" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="s5h-Xc-7So"/>
                             <constraint firstItem="M5B-6m-yHD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xqJ-34-c0b"/>
                         </constraints>
                     </view>

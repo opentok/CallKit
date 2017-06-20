@@ -122,6 +122,7 @@ static OSStatus playout_cb(void *ref_con,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [[OTDefaultAudioDevice alloc] init];
+        [_sharedInstance setupAudioSession];
     });
     return _sharedInstance;
 }
@@ -482,6 +483,10 @@ static bool CheckError(OSStatus error, NSString* function) {
 }
 - (void) setupAudioSession
 {
+    if (isAudioSessionSetup) {
+        return;
+    }
+    
     AVAudioSession *mySession = [AVAudioSession sharedInstance];
     _previousAVAudioSessionCategory = mySession.category;
     avAudioSessionMode = mySession.mode;
