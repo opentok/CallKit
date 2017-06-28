@@ -22,39 +22,69 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M5B-6m-yHD">
-                                <rect key="frame" x="119" y="318.5" width="138" height="30"/>
-                                <state key="normal" title="Receive a call Lucas"/>
+                                <rect key="frame" x="109" y="356.5" width="156" height="30"/>
+                                <state key="normal" title="Simulate Incoming Call">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="receiveCallLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HIN-Hy-5D6"/>
+                                    <action selector="receiveCallLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8EM-RY-UL5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EWj-Lg-VlD">
-                                <rect key="frame" x="152" y="356" width="71" height="30"/>
-                                <state key="normal" title="Call Lucas"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g8T-fv-bWg">
+                                <rect key="frame" x="22" y="394" width="332" height="27"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <state key="normal" title="Simulate Incoming Call after 3 seconds(Background mode)">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="callLucas:" destination="BYZ-38-t0r" eventType="touchUpInside" id="29a-eD-i3B"/>
+                                    <action selector="receiveCallLucasAfterThreeSeconds:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cEH-h5-VOU"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kUw-TJ-83h">
-                                <rect key="frame" x="162" y="394" width="52" height="30"/>
-                                <state key="normal" title="EndCall">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T9l-bm-7HI">
+                                <rect key="frame" x="168" y="429" width="39" height="30"/>
+                                <state key="normal" title="Reset">
                                     <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="endCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xQ9-tY-vM1"/>
+                                    <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Hsf-Zl-gx2"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9aI-yW-7Tw">
+                                <rect key="frame" x="149" y="318.5" width="77" height="30"/>
+                                <state key="normal" title="Make a call">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="callButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eRQ-rc-Kp9"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="EWj-Lg-VlD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VRe-9r-LCv"/>
-                            <constraint firstItem="M5B-6m-yHD" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="WLR-HC-Lan"/>
-                            <constraint firstItem="EWj-Lg-VlD" firstAttribute="top" secondItem="M5B-6m-yHD" secondAttribute="bottom" constant="8" id="g3J-hc-Yre"/>
-                            <constraint firstItem="kUw-TJ-83h" firstAttribute="top" secondItem="EWj-Lg-VlD" secondAttribute="bottom" constant="8" id="p9U-ZN-Go7"/>
-                            <constraint firstItem="kUw-TJ-83h" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="s5h-Xc-7So"/>
+                            <constraint firstItem="M5B-6m-yHD" firstAttribute="top" secondItem="9aI-yW-7Tw" secondAttribute="bottom" constant="8" id="3Q8-da-vRN"/>
+                            <constraint firstItem="T9l-bm-7HI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Cjl-86-cRM"/>
+                            <constraint firstItem="g8T-fv-bWg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="J1U-YB-kys"/>
+                            <constraint firstItem="9aI-yW-7Tw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="LVB-zk-Rcq"/>
+                            <constraint firstItem="9aI-yW-7Tw" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fau-bh-xxI"/>
+                            <constraint firstItem="T9l-bm-7HI" firstAttribute="top" secondItem="g8T-fv-bWg" secondAttribute="bottom" constant="8" id="nrK-gA-CAJ"/>
+                            <constraint firstItem="g8T-fv-bWg" firstAttribute="top" secondItem="M5B-6m-yHD" secondAttribute="bottom" constant="8" id="ruY-kY-VXR"/>
                             <constraint firstItem="M5B-6m-yHD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xqJ-34-c0b"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="callButton" destination="9aI-yW-7Tw" id="Kh9-cg-IdH"/>
+                        <outlet property="simulateCallButton" destination="M5B-6m-yHD" id="U2Q-QK-ta3"/>
+                        <outlet property="simulateCallButton2" destination="g8T-fv-bWg" id="ABY-0C-tDn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

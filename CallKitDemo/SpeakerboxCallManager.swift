@@ -24,7 +24,7 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(startCallAction)
 
-        requestTransaction(transaction)
+        requestTransaction(transaction, action: "startCall")
     }
 
     func end(call: SpeakerboxCall) {
@@ -32,7 +32,7 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(endCallAction)
 
-        requestTransaction(transaction)
+        requestTransaction(transaction, action: "endCall")
     }
 
     func setHeld(call: SpeakerboxCall, onHold: Bool) {
@@ -40,15 +40,15 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(setHeldCallAction)
 
-        requestTransaction(transaction)
+        requestTransaction(transaction, action: "holdCall")
     }
 
-    private func requestTransaction(_ transaction: CXTransaction) {
+    private func requestTransaction(_ transaction: CXTransaction, action: String = "") {
         callController.request(transaction) { error in
             if let error = error {
                 print("Error requesting transaction: \(error)")
             } else {
-                print("Requested transaction successfully")
+                print("Requested transaction \(action) successfully")
             }
         }
     }

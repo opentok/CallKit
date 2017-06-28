@@ -122,6 +122,9 @@ static OSStatus playout_cb(void *ref_con,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [[OTDefaultAudioDevice alloc] init];
+        
+        // TODO: we have to set up the audio session as early as possible due to a CallKit issue
+        // https://forums.developer.apple.com/thread/64544
         [_sharedInstance setupAudioSession];
     });
     return _sharedInstance;
