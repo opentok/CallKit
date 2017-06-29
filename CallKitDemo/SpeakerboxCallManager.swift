@@ -93,11 +93,4 @@ final class SpeakerboxCallManager: NSObject {
     private func postCallsChangedNotification() {
         NotificationCenter.default.post(name: type(of: self).CallsChangedNotification, object: self)
     }
-
-    // MARK: SpeakerboxCallDelegate
-
-    func speakerboxCallDidChangeState(_ call: SpeakerboxCall) {
-        postCallsChangedNotification()
-    }
-
 }
