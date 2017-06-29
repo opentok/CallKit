@@ -46,7 +46,6 @@ extension AppDelegate: PKPushRegistryDelegate {
     }
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
-        print(UUID())
         print("\(#function) incoming voip notfication: \(payload.dictionaryPayload)")
         if let uuidString = payload.dictionaryPayload["UUID"] as? String,
             let handle = payload.dictionaryPayload["handle"] as? String,

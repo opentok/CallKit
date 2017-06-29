@@ -10,11 +10,11 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    final let displayCaller = "Jane Appleseed"
-    final let makeACallText = "Make a call"
-    final let simulateIncomingCallText = "Simulate Incoming Call"
-    final let simulateIncomingCallThreeSecondsText = "Simulate Incoming Call after 3 seconds(Background mode)"
-    final let endCallText = "End call"
+    fileprivate final let displayCaller = "Lucas Huang"
+    fileprivate final let makeACallText = "Make a call"
+    fileprivate final let simulateIncomingCallText = "Simulate Call"
+    fileprivate final let simulateIncomingCallThreeSecondsText = "Simulate Call after 3s(Background)"
+    fileprivate final let endCallText = "End call"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -49,7 +49,7 @@ class ViewController: UIViewController {
         else {
             endCall()
             sender.setTitle(simulateIncomingCallText, for: .normal)
-            sender.setTitleColor(.blue, for: .normal)
+            sender.setTitleColor(.white, for: .normal)
             callButton.isEnabled = true
             simulateCallButton2.isEnabled = true
         }
@@ -78,7 +78,7 @@ class ViewController: UIViewController {
         else {
             endCall()
             sender.setTitle(simulateIncomingCallThreeSecondsText, for: .normal)
-            sender.setTitleColor(.blue, for: .normal)
+            sender.setTitleColor(.white, for: .normal)
             callButton.isEnabled = true
             simulateCallButton.isEnabled = true
         }
@@ -101,25 +101,11 @@ class ViewController: UIViewController {
         else {
             endCall()
             sender.setTitle(makeACallText, for: .normal)
-            sender.setTitleColor(.blue, for: .normal)
+            sender.setTitleColor(.white, for: .normal)
             simulateCallButton.isEnabled = true
             simulateCallButton2.isEnabled = true
         }
     }
-    
-    @IBAction func resetButtonPressed(_ sender: Any) {
-        endCall()
-        callButton.setTitle(makeACallText, for: .normal)
-        callButton.setTitleColor(.blue, for: .normal)
-        callButton.isEnabled = true
-        simulateCallButton.setTitle(simulateIncomingCallText, for: .normal)
-        simulateCallButton.setTitleColor(.blue, for: .normal)
-        simulateCallButton.isEnabled = true
-        simulateCallButton2.setTitle(simulateIncomingCallThreeSecondsText, for: .normal)
-        simulateCallButton2.setTitleColor(.blue, for: .normal)
-        simulateCallButton2.isEnabled = true
-    }
-    
     
     func handleCallsChangedNotification(notification: NSNotification) {
         
