@@ -10,6 +10,10 @@ import UIKit
 import PushKit
 import CallKit
 
+let apiKey = ""
+let sessionId = ""
+let token = ""
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

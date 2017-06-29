@@ -115,6 +115,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             if success {
                 action.fulfill()
                 self.callManager.addCall(call)
+                call.startAudio()
             }
             else {
                 action.fail()
@@ -214,7 +215,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         
         // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
-        startCall?.startAudio()
         answerCall?.startAudio()
     }
 

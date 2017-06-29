@@ -106,14 +106,14 @@ final class SpeakerboxCall: NSObject {
     var startCallCompletion: ((Bool) -> Void)?
     func startCall(completion: ((_ success: Bool) -> Void)?) {
         if session == nil {
-            session = OTSession(apiKey: "", sessionId: "", delegate: self)
+            session = OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self)
         }
         
         startCallCompletion = completion
         
         var error: OTError?
         hasStartedConnecting = true
-        session?.connect(withToken: "", error: &error)
+        session?.connect(withToken: token, error: &error)
         if error != nil {
             print(error!)
         }
@@ -122,14 +122,14 @@ final class SpeakerboxCall: NSObject {
     var answerCallCompletion: ((Bool) -> Void)?
     func answerCall(completion: ((_ success: Bool) -> Void)?) {
         if session == nil {
-            session = OTSession(apiKey: "", sessionId: "", delegate: self)
+            session = OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self)
         }
         
         answerCallCompletion = completion
         
         var error: OTError?
         hasStartedConnecting = true
-        session?.connect(withToken: "", error: &error)
+        session?.connect(withToken: token, error: &error)
         if error != nil {
             print(error!)
         }
