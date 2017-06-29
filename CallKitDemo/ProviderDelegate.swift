@@ -82,7 +82,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
          */
     }
 
-    var startCall: SpeakerboxCall?
+    var outgoingCall: SpeakerboxCall?
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         // Create & configure an instance of SpeakerboxCall, the app's model class representing the new outgoing call.
         let call = SpeakerboxCall(uuid: action.callUUID, isOutgoing: true)
@@ -96,8 +96,8 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // https://forums.developer.apple.com/thread/64544
         // we can't configure the audio session here for the case of launching it from locked screen
         // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
+        // please look for  * pre-heat the AVAudioSession *
 //        configureAudioSession()
-        self.startCall = call
         
         /*
             Set callback blocks for significant events in the call's lifecycle, so that the CXProvider may be updated
@@ -110,17 +110,10 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             self?.provider.reportOutgoingCall(with: call.uuid, connectedAt: call.connectDate)
         }
 
-        // Trigger the call to be started via the underlying network service.
-        call.startCall { success in
-            if success {
-                action.fulfill()
-                self.callManager.addCall(call)
-                call.startAudio()
-            }
-            else {
-                action.fail()
-            }
-        }
+        self.outgoingCall = call
+        
+        // Signal to the system that the action has been successfully performed.
+        action.fulfill()
     }
 
     var answerCall: SpeakerboxCall?
@@ -140,19 +133,13 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // https://forums.developer.apple.com/thread/64544
         // we can't configure the audio session here for the case of launching it from locked screen
         // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
+        // please look for  * pre-heat the AVAudioSession *
 //        configureAudioSession()
 
-        // Trigger the call to be answered via the underlying network service.
         self.answerCall = call
         
-        call.answerCall { success in
-            if success {
-                action.fulfill()
-            }
-            else {
-                action.fail()
-            }
-        }
+        // Signal to the system that the action has been successfully performed.
+        action.fulfill()
     }
 
     
@@ -215,7 +202,18 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         
         // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
-        answerCall?.startAudio()
+        outgoingCall?.startCall { success in
+            if success {
+                self.callManager.addCall(self.outgoingCall!)
+                self.outgoingCall?.startAudio()
+            }
+        }
+        
+        answerCall?.answerCall { success in
+            if success {
+                self.answerCall?.startAudio()
+            }
+        }
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
@@ -225,8 +223,10 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
              Restart any non-call related audio now that the app's audio session has been
              de-activated after having its priority restored to normal.
          */
-        startCall?.endCall()
+        outgoingCall?.endCall()
+        outgoingCall = nil
         answerCall?.endCall()
+        answerCall = nil
         callManager.removeAllCalls()
     }
 }

@@ -52,7 +52,7 @@ extension AppDelegate: PKPushRegistryDelegate {
             let handle = payload.dictionaryPayload["handle"] as? String,
             let uuid = UUID(uuidString: uuidString) {
             
-            
+            // display incoming call UI when receiving incoming voip notification
             let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
             self.displayIncomingCall(uuid: uuid, handle: handle, hasVideo: false) { _ in
                 UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
