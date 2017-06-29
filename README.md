@@ -35,10 +35,10 @@ Configure the sample app code. Then, build and run the app.
       - A badge in home screen indicating an ongoing VoIP call.
       - An incoming native phone call will not interrupt the current VoIP call, instead it shows the option menu.
 
-  1. **Simulate a call**
+  2. **Simulate a call**
 
     An incoming call screen presents. Upon acceptance, the system will open the app. Then, the app priority gets upgraded to system level and starts publishing to OpenTok platform.
 
-  1. **Simulate Call after 3s(Background)** (After clicking the button, please lock your cell phone to test this scenario.)
+  3. **Simulate Call after 3s(Background)** (After clicking the button, please lock your cell phone to test this scenario.)
 
     The system will wake up your cell phone with a slider bar at the bottom. Upon acceptance
