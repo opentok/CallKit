@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		A005B7411EF45BE60076B552 /* OTDefaultAudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = A005B73E1EF45BE60076B552 /* OTDefaultAudioDevice.m */; };
 		A005B7421EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.m in Sources */ = {isa = PBXBuildFile; fileRef = A005B7401EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.m */; };
-		A040303B1EEB36820068AF20 /* URL+StartCallConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040303A1EEB36820068AF20 /* URL+StartCallConvertible.swift */; };
-		A040303D1EEB36BB0068AF20 /* StartCallConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040303C1EEB36BB0068AF20 /* StartCallConvertible.swift */; };
-		A040303F1EEB36D10068AF20 /* NSUserActivity+StartCallConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040303E1EEB36D10068AF20 /* NSUserActivity+StartCallConvertible.swift */; };
 		A04D825E1EEB1E3E00EBA4CA /* SpeakerboxCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04D825C1EEB1E3E00EBA4CA /* SpeakerboxCall.swift */; };
 		A04D825F1EEB1E3E00EBA4CA /* SpeakerboxCallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04D825D1EEB1E3E00EBA4CA /* SpeakerboxCallManager.swift */; };
 		A04D82611EEB1EB000EBA4CA /* ProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04D82601EEB1EB000EBA4CA /* ProviderDelegate.swift */; };
@@ -30,9 +27,6 @@
 		A005B73E1EF45BE60076B552 /* OTDefaultAudioDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTDefaultAudioDevice.m; sourceTree = "<group>"; };
 		A005B73F1EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTDefaultAudioDeviceWithVolumeControl.h; sourceTree = "<group>"; };
 		A005B7401EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTDefaultAudioDeviceWithVolumeControl.m; sourceTree = "<group>"; };
-		A040303A1EEB36820068AF20 /* URL+StartCallConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+StartCallConvertible.swift"; sourceTree = "<group>"; };
-		A040303C1EEB36BB0068AF20 /* StartCallConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartCallConvertible.swift; sourceTree = "<group>"; };
-		A040303E1EEB36D10068AF20 /* NSUserActivity+StartCallConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSUserActivity+StartCallConvertible.swift"; sourceTree = "<group>"; };
 		A04D825C1EEB1E3E00EBA4CA /* SpeakerboxCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerboxCall.swift; sourceTree = "<group>"; };
 		A04D825D1EEB1E3E00EBA4CA /* SpeakerboxCallManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeakerboxCallManager.swift; sourceTree = "<group>"; };
 		A04D82601EEB1EB000EBA4CA /* ProviderDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderDelegate.swift; sourceTree = "<group>"; };
@@ -90,9 +84,6 @@
 				A062C6251EE5FAA200FD64A3 /* ViewController.swift */,
 				A04D825C1EEB1E3E00EBA4CA /* SpeakerboxCall.swift */,
 				A04D825D1EEB1E3E00EBA4CA /* SpeakerboxCallManager.swift */,
-				A040303C1EEB36BB0068AF20 /* StartCallConvertible.swift */,
-				A040303A1EEB36820068AF20 /* URL+StartCallConvertible.swift */,
-				A040303E1EEB36D10068AF20 /* NSUserActivity+StartCallConvertible.swift */,
 				A062C6271EE5FAA200FD64A3 /* Main.storyboard */,
 				A062C62A1EE5FAA200FD64A3 /* Assets.xcassets */,
 				A062C62C1EE5FAA200FD64A3 /* LaunchScreen.storyboard */,
@@ -188,11 +179,8 @@
 			files = (
 				A062C6261EE5FAA200FD64A3 /* ViewController.swift in Sources */,
 				A04D825F1EEB1E3E00EBA4CA /* SpeakerboxCallManager.swift in Sources */,
-				A040303D1EEB36BB0068AF20 /* StartCallConvertible.swift in Sources */,
-				A040303F1EEB36D10068AF20 /* NSUserActivity+StartCallConvertible.swift in Sources */,
 				A062C6241EE5FAA200FD64A3 /* AppDelegate.swift in Sources */,
 				A04D825E1EEB1E3E00EBA4CA /* SpeakerboxCall.swift in Sources */,
-				A040303B1EEB36820068AF20 /* URL+StartCallConvertible.swift in Sources */,
 				A005B7411EF45BE60076B552 /* OTDefaultAudioDevice.m in Sources */,
 				A04D82611EEB1EB000EBA4CA /* ProviderDelegate.swift in Sources */,
 				A005B7421EF45BE60076B552 /* OTDefaultAudioDeviceWithVolumeControl.m in Sources */,
