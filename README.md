@@ -1,3 +1,5 @@
+![logo](./tokbox-logo.png)
+
 # CallKit Integration with OpenTok
 A sample app to demonstrate how to integrate CallKit into OpenTok iOS SDK. This sample app is built on top of the [SpeakerBox](https://developer.apple.com/library/content/samplecode/Speakerbox/Introduction/Intro.html) app in WWDC 2016
 
