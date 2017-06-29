@@ -33,14 +33,14 @@ Configure the sample app code. Then, build and run the app.
 
   1. **Make a call**: 
 
-    The app priority will get boosted and start publishing to OpenTok platform. You won't notice any differences until you go to the home screen. Two ways to verify:
-      - A badge in home screen indicating an ongoing VoIP call.
-      - An incoming native phone call will not interrupt the current VoIP call, instead it shows the option menu.
+The app priority will get boosted and start publishing to OpenTok platform. You won't notice any differences until you go to the home screen. Two ways to verify:
+  - A badge in home screen indicating an ongoing VoIP call.
+  - An incoming native phone call will not interrupt the current VoIP call, instead it shows the option menu.
 
   2. **Simulate a call**
 
-    An incoming call screen presents. Upon acceptance, the system will open the app. Then, the app priority gets upgraded to system level and starts publishing to OpenTok platform.
+An incoming call screen presents. Upon acceptance, the system will open the app. Then, the app priority gets upgraded to system level and starts publishing to OpenTok platform.
 
   3. **Simulate Call after 3s(Background)** (After clicking the button, please lock your cell phone to test this scenario.)
 
-    The system will wake up your cell phone with a slider bar at the bottom. Upon acceptance
+The system will wake up your cell phone with a slider bar at the bottom. Upon acceptance.
