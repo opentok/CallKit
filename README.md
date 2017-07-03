@@ -39,8 +39,8 @@ The iOS system boosts the call priority of the app. Then, the app starts publish
 
   2. **Simulate a call**
 
-An incoming call screen presents. Upon acceptance, the iOS system opens the app and boosts the call priority. Then, the app starts publishing to OpenTok platform.
+An incoming call screen appears. Upon acceptance, the iOS system opens the app and boosts the call priority. Then, the app starts publishing to OpenTok platform.
 
   3. **Simulate Call after 3s(Background)** (After clicking the button, please lock your cell phone to test this scenario.)
 
-The system wakes up your cell phone by make a native calling screen appearing with a slider bar at the bottom. Upon acceptance, the iOS system stays at the current screen and boosts the call priority. Then, the app (which runs at the background that moment) starts publishing to OpenTok platform. 
+The system wakes up your cell phone by making a native calling screen with a slider bar at the bottom. Upon acceptance, the iOS system stays at the current screen and boosts the call priority. Then, the app (which runs in the background during that time) starts publishing to the OpenTok platform. 
