@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CallKit
 import AVFoundation
+import OpenTok
 
 final class ProviderDelegate: NSObject, CXProviderDelegate {
 
@@ -53,7 +54,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         update.hasVideo = hasVideo
 
         // pre-heat the AVAudioSession
-        OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDeviceWithVolumeControl.sharedInstance())
+        OTAudioDeviceManager.setAudioDevice(DefaultAudioDevice.sharedInstance)
         
         // Report the incoming call to the system
         provider.reportNewIncomingCall(with: uuid, update: update) { error in
