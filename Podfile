@@ -7,5 +7,4 @@ target 'CallKitDemo' do
 
   # Pods for CallKitDemo
   pod 'OpenTok'
-  pod 'NWPusher', '~> 0.7.0'
 end
