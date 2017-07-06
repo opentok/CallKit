@@ -8,6 +8,7 @@
 
 import UIKit
 import CallKit
+import OpenTok
 
 final class SpeakerboxCallManager: NSObject {
 
@@ -18,7 +19,7 @@ final class SpeakerboxCallManager: NSObject {
     func startCall(handle: String, video: Bool = false) {
         
         // pre-heat the AVAudioSession
-        OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDeviceWithVolumeControl.sharedInstance())
+        OTAudioDeviceManager.setAudioDevice(DefaultAudioDevice.sharedInstance)
         
         let handle = CXHandle(type: .phoneNumber, value: handle)
         let startCallAction = CXStartCallAction(call: UUID(), handle: handle)
