@@ -40,9 +40,13 @@ The iOS system boosts the call priority of the app. Then, the app starts publish
 
 The native incoming call screen appears. Upon acceptance, the iOS system opens the app and boosts the call priority. Then, the app starts publishing to OpenTok platform.
 
+![unlock1](./unlock1.png) ---> ![unlock2](./unlock2.png)
+
   3. **Simulate an incoming call after 3s(Background)** (After clicking the button, please lock your cell phone to test this scenario.)
 
 The system wakes up your cell phone by making a native calling screen appear. Upon acceptance (a slider is shown instead of two buttons for the locked screen), the phone stays locked and boosts the call priority. Then, the app (which runs in the background during that time) starts publishing to OpenTok platform. 
+
+![lock1](./lock1.png) ---> ![lock2](./lock2.png)
 
   4. **Without simulation, use a push server or [NWPusher](https://github.com/noodlewerk/NWPusher) to call**
 
