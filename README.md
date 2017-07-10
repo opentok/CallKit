@@ -140,7 +140,11 @@ func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession
 }
 ```
 
-Let's explore how to make a call and answer a call on behalf of a user. To do that, we need a `CXCallController` object to interact with the system. The `CXCallController` object takes a `CXTransaction` object to request a telephony action (which will later trigger delegate methods above if succeed). To specify a telephony action in a transaction, you need to create your desired action object and associate them with the transaction. Each telephony action has a corresponding `CXAction` class such as `CXEndCallAction` for ending a call, `CXSetHeldCallAction` for setting a call on hold. Once you have it all ready, invoke the `request(_:completion:)` by passing a ready transaction object. Here's how you start a call:
+Let's explore how to make a call and answer a call on behalf of a user. To do that, we need a `CXCallController` object to interact with the system. 
+
+The `CXCallController` object takes a `CXTransaction` object to request a telephony action (which will later trigger delegate methods above if succeed). To specify a telephony action in a transaction, you need to create your desired action object and associate them with the transaction. Each telephony action has a corresponding `CXAction` class such as `CXEndCallAction` for ending a call, `CXSetHeldCallAction` for setting a call on hold. 
+
+Once you have it all ready, invoke the `request(_:completion:)` by passing a ready transaction object. Here's how you start a call:
 
 ```swift
 // create a CXAction
@@ -179,3 +183,12 @@ provider.reportNewIncomingCall(with: uuid, update: update) { error in
 ```
 
 ![call](./call.jpeg)
+
+
+### A glitch
+
+There is a small [issue](https://forums.developer.apple.com/thread/64544) when accepting a call from a locked screen. The underlying audio session does get activated propertly inside the CallKit framework. Apple's engineers propose a workaround by setting up the audio session as early as possible to make the case work out temporarily: 
+
+```
+then a workaround would be to configure your app's audio session (call `configureAudioSession()`) earlier in your app's lifecycle, before the `-provider:performAnswerCallAction:` method is invoked.
+```
