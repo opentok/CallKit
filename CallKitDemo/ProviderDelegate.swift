@@ -89,7 +89,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         let call = SpeakerboxCall(uuid: action.callUUID, isOutgoing: true)
         call.handle = action.handle.value
 
-        // FIXME
         /*
             Configure the audio session, but do not start call audio here, since it must be done once
             the audio session has been activated by the system after having its priority elevated.
@@ -125,7 +124,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
             return
         }
 
-        // FIXME
         /*
             Configure the audio session, but do not start call audio here, since it must be done once
             the audio session has been activated by the system after having its priority elevated.
@@ -161,7 +159,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         callManager.removeCall(call)
     }
 
-    // FIXME
     func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
         // Retrieve the SpeakerboxCall instance corresponding to the action's call UUID
         guard let call = callManager.callWithUUID(uuid: action.callUUID) else {
@@ -201,7 +198,6 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("Received \(#function)")
         
-        // FIXME
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
         outgoingCall?.startCall { success in
             if success {
