@@ -1,0 +1,29 @@
+language: objective-c
+osx_image: xcode8
+cache: cocoapods
+
+env:
+  global:
+  - LANG=en_US.UTF-8
+
+  - WORKSPACE="CallKitDemo.xcworkspace"
+  - IOS_SCHEME="CallKitDemo"
+  - IOS_SDK=iphonesimulator10.0
+
+  matrix:
+
+  - DESTINATION="OS=10.0,name=iPhone 6s Plus"   SDK="$IOS_SDK" SCHEME="$IOS_SCHEME" RUN_TESTS="NO" BUILD_EXAMPLE="NO" RUN_UI_TESTS="NO"
+
+before_install:
+  - gem install cocoapods --pre
+  - pod update
+
+script:
+- set -o pipefail
+
+- if [ $RUN_TESTS == "YES" ]; then
+    travis_retry xcodebuild clean build test -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO | xcpretty -c;
+  else
+    travis_retry xcodebuild clean build -workspace "$WORKSPACE" -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO | xcpretty -c;
+  fi
+
