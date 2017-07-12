@@ -1,5 +1,7 @@
 ![logo](./tokbox-logo.png)
 
+[![Build Status](https://travis-ci.org/opentok/CallKit.svg?branch=master)](https://travis-ci.org/opentok/CallKit)
+
 # CallKit Integration with OpenTok
 A sample app to demonstrate how to integrate the [CallKit](https://developer.apple.com/documentation/callkit) into OpenTok iOS SDK. This sample app is built based on the [SpeakerBox](https://developer.apple.com/library/content/samplecode/Speakerbox/Introduction/Intro.html) app from [WWDC 2016 CallKit Session](https://developer.apple.com/videos/play/wwdc2016/230/)
 
