@@ -122,7 +122,7 @@ func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
 }
 ``` 
 
-Three of them are essentially important. They are the indication of whether your VoIP call has been successfully priority boosted or recovered. 
+The following methods indicate whether your VoIP call has been successfully priority boosted or recovered.
 
 ```swift
 func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -189,7 +189,7 @@ provider.reportNewIncomingCall(with: uuid, update: update) { error in
 
 ### A glitch
 
-There is a small [issue](https://forums.developer.apple.com/thread/64544) when accepting a call from a locked screen. The underlying audio session does get activated propertly inside the CallKit framework. Apple's engineers propose a workaround by setting up the audio session as early as possible to make the case work out temporarily: 
+There is a small [issue](https://forums.developer.apple.com/thread/64544) when accepting a call from a locked screen. The underlying audio session does not get activated propertly inside the CallKit framework. Apple's engineers propose a workaround by setting up the audio session as early as possible to make the case work out temporarily: 
 
 ```
 then a workaround would be to configure your app's audio session (call `configureAudioSession()`) earlier in your app's lifecycle, before the `-provider:performAnswerCallAction:` method is invoked.
