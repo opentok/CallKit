@@ -47,12 +47,13 @@ extension AppDelegate: PKPushRegistryDelegate {
     }
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+        
         print("\(#function) incoming voip notfication: \(payload.dictionaryPayload)")
         if let uuidString = payload.dictionaryPayload["UUID"] as? String,
             let handle = payload.dictionaryPayload["handle"] as? String,
             let uuid = UUID(uuidString: uuidString) {
             
-            OTAudioDeviceManager.setAudioDevice(DefaultAudioDevice.sharedInstance)
+            OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance())
                 
             // display incoming call UI when receiving incoming voip notification
             let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
