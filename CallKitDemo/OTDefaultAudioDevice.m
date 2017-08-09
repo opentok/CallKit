@@ -484,6 +484,7 @@ static bool CheckError(OSStatus error, NSString* function) {
 - (void) setupAudioSession
 {
     if (isAudioSessionSetup) return;
+    isAudioSessionSetup = YES;
     
     AVAudioSession *mySession = [AVAudioSession sharedInstance];
     _previousAVAudioSessionCategory = mySession.category;
