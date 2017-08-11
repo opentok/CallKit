@@ -19,7 +19,7 @@ final class SpeakerboxCallManager: NSObject {
     func startCall(handle: String, video: Bool = false) {
         
         // pre-heat the AVAudioSession
-        OTAudioDeviceManager.setAudioDevice(DefaultAudioDevice.sharedInstance)
+        OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance())
         
         let handle = CXHandle(type: .phoneNumber, value: handle)
         let startCallAction = CXStartCallAction(call: UUID(), handle: handle)
