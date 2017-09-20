@@ -27,6 +27,7 @@
  * It is not recommended to initialize unique audio device instances.
  */
 + (instancetype)sharedInstance;
++ (instancetype)sharedInstanceWithAudioSession:(AVAudioSession *)audioSession;
 
 /** 
  * Override the audio unit preferred component subtype. This can be used to
