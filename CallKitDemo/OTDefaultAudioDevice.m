@@ -67,6 +67,8 @@ static OSStatus playout_cb(void *ref_con,
 @interface OTDefaultAudioDevice ()
 - (BOOL) setupAudioUnit:(AudioUnit *)voice_unit playout:(BOOL)isPlayout;
 - (void) setupListenerBlocks;
+
+@property (assign) BOOL isAudioSessionSetup;
 @end
 
 #define OT_AUDIO_RESTART_ATTEMPTS 3
@@ -88,7 +90,6 @@ static OSStatus playout_cb(void *ref_con,
     NSString* avAudioSessionMode;
     double avAudioSessionPreffSampleRate;
     NSInteger avAudioSessionChannels;
-    BOOL isAudioSessionSetup;
     BOOL areListenerBlocksSetup;
     
     /* synchronize all access to the audio subsystem */
@@ -122,7 +123,18 @@ static OSStatus playout_cb(void *ref_con,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [[OTDefaultAudioDevice alloc] init];
-        [_sharedInstance setupAudioSession];
+        [_sharedInstance setupAudioSession:nil];
+    });
+    return _sharedInstance;
+}
+
++ (instancetype)sharedInstanceWithAudioSession:(AVAudioSession *)audioSession
+{
+    static OTDefaultAudioDevice* _sharedInstance;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[OTDefaultAudioDevice alloc] init];
+        [_sharedInstance setupAudioSession:audioSession];
     });
     return _sharedInstance;
 }
@@ -465,7 +477,7 @@ static bool CheckError(OSStatus error, NSString* function) {
     [mySession setPreferredInputNumberOfChannels:avAudioSessionChannels
                                            error:nil];
     
-    isAudioSessionSetup = NO;
+    self.isAudioSessionSetup = NO;
 }
 
 - (void)freeupAudioBuffers
@@ -481,12 +493,15 @@ static bool CheckError(OSStatus error, NSString* function) {
         buffer_num_frames = 0;
     }
 }
-- (void) setupAudioSession
+- (void) setupAudioSession:(AVAudioSession *)audioSession
 {
-    if (isAudioSessionSetup) return;
-    isAudioSessionSetup = YES;
+    if (self.isAudioSessionSetup) return;
+    self.isAudioSessionSetup = YES;
     
-    AVAudioSession *mySession = [AVAudioSession sharedInstance];
+    AVAudioSession *mySession = audioSession;
+    if (mySession == nil) {
+        mySession = [AVAudioSession sharedInstance];
+    }
     _previousAVAudioSessionCategory = mySession.category;
     avAudioSessionMode = mySession.mode;
     avAudioSessionPreffSampleRate = mySession.preferredSampleRate;
@@ -987,10 +1002,10 @@ static OSStatus playout_cb(void *ref_con,
     
     mach_timebase_info(&info);
     
-    if (!isAudioSessionSetup)
+    if (!self.isAudioSessionSetup)
     {
-        [self setupAudioSession];
-        isAudioSessionSetup = YES;
+        [self setupAudioSession:nil];
+        self.isAudioSessionSetup = YES;
     }
     
     UInt32 bytesPerSample = sizeof(SInt16);
@@ -1052,6 +1067,10 @@ static OSStatus playout_cb(void *ref_con,
         AudioUnitSetProperty(*voice_unit, kAudioUnitProperty_ShouldAllocateBuffer,
                              kAudioUnitScope_Output, kInputBus, &flag,
                              sizeof(flag));
+        UInt32 enable_output = 0;
+        AudioUnitSetProperty(*voice_unit, kAudioOutputUnitProperty_EnableIO,
+                              kAudioUnitScope_Output, kOutputBus, &enable_output,
+                              sizeof(enable_output));
         
     } else
     {
@@ -1062,6 +1081,10 @@ static OSStatus playout_cb(void *ref_con,
         AudioUnitSetProperty(*voice_unit, kAudioUnitProperty_StreamFormat,
                              kAudioUnitScope_Input, kOutputBus,
                              &stream_format, sizeof (stream_format));
+        UInt32 enable_input = 0;
+        AudioUnitSetProperty(*voice_unit, kAudioOutputUnitProperty_EnableIO,
+                              kAudioUnitScope_Input, kInputBus, &enable_input,
+                              sizeof(enable_input));
         [self setPlayOutRenderCallback:*voice_unit];
     }
     

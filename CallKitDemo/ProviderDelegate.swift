@@ -54,7 +54,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         update.hasVideo = hasVideo
 
         // pre-heat the AVAudioSession
-        OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance())
+        //OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance())
         
         // Report the incoming call to the system
         provider.reportNewIncomingCall(with: uuid, update: update) { error in
@@ -97,7 +97,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // we can't configure the audio session here for the case of launching it from locked screen
         // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
         // please look for  * pre-heat the AVAudioSession *
-//        configureAudioSession()
+        configureAudioSession()
         
         /*
             Set callback blocks for significant events in the call's lifecycle, so that the CXProvider may be updated
@@ -133,7 +133,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // we can't configure the audio session here for the case of launching it from locked screen
         // instead, we have to pre-heat the AVAudioSession by configuring as early as possible, didActivate do not get called otherwise
         // please look for  * pre-heat the AVAudioSession *
-//        configureAudioSession()
+        configureAudioSession()
 
         self.answerCall = call
         
@@ -199,14 +199,14 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         print("Received \(#function)")
         
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
-        outgoingCall?.startCall { success in
+        outgoingCall?.startCall(withAudioSession: audioSession) { success in
             if success {
                 self.callManager.addCall(self.outgoingCall!)
                 self.outgoingCall?.startAudio()
             }
         }
         
-        answerCall?.answerCall { success in
+        answerCall?.answerCall(withAudioSession: audioSession) { success in
             if success {
                 self.answerCall?.startAudio()
             }
@@ -225,5 +225,14 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         answerCall?.endCall()
         answerCall = nil
         callManager.removeAllCalls()
+    }
+    
+    func configureAudioSession() {
+        // See https://forums.developer.apple.com/thread/64544
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+        try? session.setMode(AVAudioSessionModeVoiceChat)
+        try? session.setPreferredSampleRate(44100.0)
+        try? session.setPreferredIOBufferDuration(0.005)
     }
 }
