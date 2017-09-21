@@ -136,7 +136,6 @@ static OSStatus playout_cb(void *ref_con,
         _sharedInstance = [[OTDefaultAudioDevice alloc] init];
         _sharedInstance.isAudioSessionSetup = YES;
         [_sharedInstance setupListenerBlocks];
-        //[_sharedInstance setupAudioSession:audioSession];
     });
     return _sharedInstance;
 }
@@ -1069,6 +1068,10 @@ static OSStatus playout_cb(void *ref_con,
         AudioUnitSetProperty(*voice_unit, kAudioUnitProperty_ShouldAllocateBuffer,
                              kAudioUnitScope_Output, kInputBus, &flag,
                              sizeof(flag));
+        UInt32 enable_output = 0;
+        AudioUnitSetProperty(*voice_unit, kAudioOutputUnitProperty_EnableIO,
+                              kAudioUnitScope_Output, kOutputBus, &enable_output,
+                              sizeof(enable_output));
         
     } else
     {
@@ -1079,6 +1082,10 @@ static OSStatus playout_cb(void *ref_con,
         AudioUnitSetProperty(*voice_unit, kAudioUnitProperty_StreamFormat,
                              kAudioUnitScope_Input, kOutputBus,
                              &stream_format, sizeof (stream_format));
+        UInt32 enable_input = 0;
+        AudioUnitSetProperty(*voice_unit, kAudioOutputUnitProperty_EnableIO,
+                              kAudioUnitScope_Input, kInputBus, &enable_input,
+                              sizeof(enable_input));
         [self setPlayOutRenderCallback:*voice_unit];
     }
     
