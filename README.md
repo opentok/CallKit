@@ -37,6 +37,8 @@ Configure the sample app code. Then, build and run the app.
 The iOS system boosts the call priority of the app. Then, the app starts publishing to OpenTok platform. You won't notice any differences until you go to the home screen. Two ways to verify:
   - A badge in home screen indicating an ongoing VoIP call.
   - An incoming native phone call will not interrupt the current VoIP call, instead it shows the option menu.
+  
+  ***You will need a device to test the followings***
 
   2. **Simulate an incoming call**
 
