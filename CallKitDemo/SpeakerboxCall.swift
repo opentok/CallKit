@@ -109,7 +109,6 @@ final class SpeakerboxCall: NSObject {
         if session == nil {
             session = OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self)
         }
-        
         startCallCompletion = completion
         
         var error: OTError?
@@ -190,6 +189,14 @@ extension SpeakerboxCall: OTSessionDelegate {
     }
     
     func sessionDidDisconnect(_ session: OTSession) {
+        print(#function)
+    }
+    
+    func sessionDidBeginReconnecting(_ session: OTSession) {
+        print(#function)
+    }
+    
+    func sessionDidReconnect(_ session: OTSession) {
         print(#function)
     }
     
