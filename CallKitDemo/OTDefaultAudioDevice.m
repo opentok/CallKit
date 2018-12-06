@@ -257,7 +257,7 @@ static OSStatus playout_cb(void *ref_con,
 {
     @synchronized(self) {
         OT_AUDIO_DEBUG(@"stopRendering %d", playing);
-        
+        isPlayerInterrupted = NO;
         if (!playing) {
             return YES;
         }
@@ -270,12 +270,12 @@ static OSStatus playout_cb(void *ref_con,
         }
         
         // publisher is already closed
-        if (!recording && !isPlayerInterrupted && !_isResetting)
+        if (!recording && !_isResetting)
         {
             OT_AUDIO_DEBUG(@"teardownAudio from stopRendering");
             [self teardownAudio];
         }
-        
+
         return YES;
     }
 }
@@ -317,7 +317,7 @@ static OSStatus playout_cb(void *ref_con,
 {
     @synchronized(self) {
         OT_AUDIO_DEBUG(@"stopCapture %d", recording);
-        
+        isRecorderInterrupted = NO;
         if (!recording) {
             return YES;
         }
@@ -333,12 +333,11 @@ static OSStatus playout_cb(void *ref_con,
         [self freeupAudioBuffers];
         
         // subscriber is already closed
-        if (!playing && !isRecorderInterrupted && !_isResetting)
+        if (!playing && !_isResetting)
         {
             OT_AUDIO_DEBUG(@"teardownAudio from stopCapture");
             [self teardownAudio];
         }
-        
         return YES;
     }
 }
@@ -461,7 +460,7 @@ static bool CheckError(OSStatus error, NSString* function) {
                                       error:nil];
     
     NSError *error = nil;
-    NSUInteger audioOptions = AVAudioSessionCategoryOptionMixWithOthers;
+    NSUInteger audioOptions = 0;
 #if !(TARGET_OS_TV)
     audioOptions |= AVAudioSessionCategoryOptionAllowBluetooth ;
     audioOptions |= AVAudioSessionCategoryOptionDefaultToSpeaker;
@@ -595,13 +594,17 @@ static bool CheckError(OSStatus error, NSString* function) {
                 OT_AUDIO_DEBUG(@"AVAudioSessionInterruptionTypeBegan");
                 if(recording)
                 {
-                    isRecorderInterrupted = YES;
+                    // DONT change the order of the following as
+                    // stopCapture sets isRecorderInterrupted to NO
                     [self stopCapture];
+                    isRecorderInterrupted = YES;
                 }
                 if(playing)
                 {
-                    isPlayerInterrupted = YES;
+                    // DONT change the order of the following as
+                    // stopRendering sets isPlayerInterrupted to NO
                     [self stopRendering];
+                    isPlayerInterrupted = YES;
                 }
             }
                 break;
