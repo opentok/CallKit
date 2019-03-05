@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var providerDelegate: ProviderDelegate?
 
     // Trigger VoIP registration on launch
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         
         
         providerDelegate = ProviderDelegate(callManager: callManager)
@@ -39,14 +39,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: PKPushRegistryDelegate {
     
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         print("\(#function) voip token: \(credentials.token)")
         
         let deviceToken = credentials.token.reduce("", {$0 + String(format: "%02X", $1) })
         print("\(#function) token is: \(deviceToken)")
     }
 
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         
         print("\(#function) incoming voip notfication: \(payload.dictionaryPayload)")
         if let uuidString = payload.dictionaryPayload["UUID"] as? String,
@@ -63,7 +63,7 @@ extension AppDelegate: PKPushRegistryDelegate {
         }
     }
     
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         print("\(#function) token invalidated")
     }
         

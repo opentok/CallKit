@@ -107,7 +107,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func handleCallsChangedNotification(notification: NSNotification) {
+    @objc func handleCallsChangedNotification(notification: NSNotification) {
         
     }
     

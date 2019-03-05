@@ -37,7 +37,7 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
 
         providerConfiguration.supportedHandleTypes = [.phoneNumber]
 
-        providerConfiguration.iconTemplateImageData = UIImagePNGRepresentation(#imageLiteral(resourceName: "IconMask"))
+        providerConfiguration.iconTemplateImageData = #imageLiteral(resourceName: "IconMask").pngData()
 
         providerConfiguration.ringtoneSound = "Ringtone.caf"
         
@@ -230,9 +230,14 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     func configureAudioSession() {
         // See https://forums.developer.apple.com/thread/64544
         let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(AVAudioSessionCategoryPlayAndRecord)
-        try? session.setMode(AVAudioSessionModeVoiceChat)
-        try? session.setPreferredSampleRate(44100.0)
-        try? session.setPreferredIOBufferDuration(0.005)
+        do {
+            try session.setCategory(AVAudioSession.Category.playAndRecord, mode: .default)
+            try session.setActive(true)
+            try session.setMode(AVAudioSession.Mode.voiceChat)
+            try session.setPreferredSampleRate(44100.0)
+            try session.setPreferredIOBufferDuration(0.005)
+        } catch {
+            print(error)
+        }
     }
 }

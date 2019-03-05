@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8
+osx_image: xcode10
 cache: cocoapods
 
 env:
@@ -8,7 +8,7 @@ env:
 
   - WORKSPACE="CallKitDemo.xcworkspace"
   - IOS_SCHEME="CallKitDemo"
-  - IOS_SDK=iphonesimulator10.0
+  - IOS_SDK=iphonesimulator12.0
 
   matrix:
 
