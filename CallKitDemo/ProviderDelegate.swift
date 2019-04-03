@@ -198,6 +198,16 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("Received \(#function)")
         
+        // If we are returning from a hold state
+        if answerCall?.hasConnected ?? false {
+            configureAudioSession()
+            return
+        }
+        if outgoingCall?.hasConnected ?? false {
+            configureAudioSession()
+            return
+        }
+        
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
         outgoingCall?.startCall(withAudioSession: audioSession) { success in
             if success {
@@ -220,6 +230,11 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
              Restart any non-call related audio now that the app's audio session has been
              de-activated after having its priority restored to normal.
          */
+        if outgoingCall?.isOnHold ?? false || answerCall?.isOnHold ?? false {
+            print("Call is on hold. Do not terminate any call")
+            return
+        }
+        
         outgoingCall?.endCall()
         outgoingCall = nil
         answerCall?.endCall()
