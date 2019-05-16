@@ -200,11 +200,19 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         
         // If we are returning from a hold state
         if answerCall?.hasConnected ?? false {
-            configureAudioSession()
+            //configureAudioSession()
+            var userInfo = Dictionary<AnyHashable, Any>()
+            let interrupttioEndedRaw = AVAudioSession.InterruptionType.ended.rawValue
+            userInfo[AVAudioSessionInterruptionTypeKey] = interrupttioEndedRaw
+            NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: self, userInfo: userInfo)
             return
         }
         if outgoingCall?.hasConnected ?? false {
-            configureAudioSession()
+            //configureAudioSession()
+            var userInfo = Dictionary<AnyHashable, Any>()
+            let interrupttioEndedRaw = AVAudioSession.InterruptionType.ended.rawValue
+            userInfo[AVAudioSessionInterruptionTypeKey] = interrupttioEndedRaw
+            NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: self, userInfo: userInfo)
             return
         }
         
