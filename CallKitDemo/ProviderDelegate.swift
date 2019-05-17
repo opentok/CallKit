@@ -201,18 +201,14 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         // If we are returning from a hold state
         if answerCall?.hasConnected ?? false {
             //configureAudioSession()
-            var userInfo = Dictionary<AnyHashable, Any>()
-            let interrupttioEndedRaw = AVAudioSession.InterruptionType.ended.rawValue
-            userInfo[AVAudioSessionInterruptionTypeKey] = interrupttioEndedRaw
-            NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: self, userInfo: userInfo)
+            // See more details on how this works in the OTDefaultAudioDevice.m method handleInterruptionEvent
+            sendFakeAudioInterruptionNotificationToStartAudioResources();
             return
         }
         if outgoingCall?.hasConnected ?? false {
             //configureAudioSession()
-            var userInfo = Dictionary<AnyHashable, Any>()
-            let interrupttioEndedRaw = AVAudioSession.InterruptionType.ended.rawValue
-            userInfo[AVAudioSessionInterruptionTypeKey] = interrupttioEndedRaw
-            NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: self, userInfo: userInfo)
+            // See more details on how this works in the OTDefaultAudioDevice.m method handleInterruptionEvent
+            sendFakeAudioInterruptionNotificationToStartAudioResources()
             return
         }
         
@@ -248,6 +244,13 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         answerCall?.endCall()
         answerCall = nil
         callManager.removeAllCalls()
+    }
+    
+    func sendFakeAudioInterruptionNotificationToStartAudioResources() {
+        var userInfo = Dictionary<AnyHashable, Any>()
+        let interrupttioEndedRaw = AVAudioSession.InterruptionType.ended.rawValue
+        userInfo[AVAudioSessionInterruptionTypeKey] = interrupttioEndedRaw
+        NotificationCenter.default.post(name: AVAudioSession.interruptionNotification, object: self, userInfo: userInfo)
     }
     
     func configureAudioSession() {
