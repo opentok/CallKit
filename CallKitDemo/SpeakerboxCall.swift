@@ -39,6 +39,7 @@ final class SpeakerboxCall: NSObject {
     }
     var isOnHold = false {
         didSet {
+            publisher?.publishAudio = !isOnHold
             stateDidChange?()
         }
     }

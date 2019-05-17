@@ -12,9 +12,11 @@ class ViewController: UIViewController {
     
     fileprivate final let displayCaller = "Lucas Huang"
     fileprivate final let makeACallText = "Make a call"
+    fileprivate final let unholdCallText = "Unhold Call"
     fileprivate final let simulateIncomingCallText = "Simulate Call"
     fileprivate final let simulateIncomingCallThreeSecondsText = "Simulate Call after 3s(Background)"
     fileprivate final let endCallText = "End call"
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -97,6 +99,8 @@ class ViewController: UIViewController {
             sender.setTitleColor(.red, for: .normal)
             simulateCallButton.isEnabled = false
             simulateCallButton2.isEnabled = false
+        } else if sender.titleLabel?.text == unholdCallText { // This state set when user receives another call
+            appdelegate.callManager.setHeld(call: appdelegate.callManager.calls[0], onHold: false)
         }
         else {
             endCall()
@@ -108,7 +112,23 @@ class ViewController: UIViewController {
     }
     
     @objc func handleCallsChangedNotification(notification: NSNotification) {
-        
+        guard let appdelegate = UIApplication.shared.delegate as? AppDelegate else {
+            
+            print("appdelegate is missing")
+            return
+        }
+
+        if (appdelegate.callManager.calls.count > 0)
+        {
+            let call = appdelegate.callManager.calls[0]
+            if (call.isOnHold)
+            {
+                callButton.setTitle(unholdCallText, for: .normal)
+            } else if((call.session) != nil) {
+                callButton.setTitle(endCallText, for: .normal)
+                callButton.setTitleColor(.red, for: .normal)
+            }
+        }
     }
     
     fileprivate func endCall() {

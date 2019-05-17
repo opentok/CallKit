@@ -633,11 +633,16 @@ static bool CheckError(OSStatus error, NSString* function) {
                                                [self handleInterruptionEvent:
                                                 AVAudioSessionInterruptionTypeEnded];
                                            });
-                        } else
+                        } else // This shouldn't happen!
                         {
-                            // This shouldn't happen!
-                            isRecorderInterrupted = NO;
-                            isPlayerInterrupted = NO;
+                            // When a call get resumed, we get first audio interruption notification from iOS
+                            // but the audio fails, since iOS holds the audio session until user presses "Unhold call",
+                            // When user press "Unhold call" we post a fake interruption notification from "didActivate" audioSession callback
+                            // So for the second time, we need to keep isRecorderInterrupted and isPlayerInterrupted to YES.
+                            // The reason for this hack is, we don't want to modify the audio driver much to avoid future audio driver
+                            // upgrades from iOS SDK internal driver.
+                            //isRecorderInterrupted = NO;
+                            //isPlayerInterrupted = NO;
                             _restartRetryCount = 0;
                             NSLog(@"ERROR[OpenTok]:Unable to acquire audio session");
                         }
