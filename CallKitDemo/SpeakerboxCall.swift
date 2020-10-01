@@ -203,6 +203,10 @@ extension SpeakerboxCall: OTSessionDelegate {
     
     func session(_ session: OTSession, didFailWithError error: OTError) {
         print(#function, error)
+        
+        hasConnected = false
+        startCallCompletion?(false)
+        answerCallCompletion?(false)
     }
     
     func session(_ session: OTSession, streamCreated stream: OTStream) {
