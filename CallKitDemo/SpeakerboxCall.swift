@@ -104,13 +104,13 @@ final class SpeakerboxCall: NSObject {
     var publisher: OTPublisher?
     var subscriber: OTSubscriber?
     
-    var startCallCompletion: ((Bool) -> Void)?
+    var canStartCall: ((Bool) -> Void)?
     func startCall(withAudioSession audioSession: AVAudioSession, completion: ((_ success: Bool) -> Void)?) {
         OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance(with: audioSession))
         if session == nil {
             session = OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self)
         }
-        startCallCompletion = completion
+        canStartCall = completion
         
         var error: OTError?
         hasStartedConnecting = true
@@ -120,14 +120,14 @@ final class SpeakerboxCall: NSObject {
         }
     }
     
-    var answerCallCompletion: ((Bool) -> Void)?
+    var canAnswerCall: ((Bool) -> Void)?
     func answerCall(withAudioSession audioSession: AVAudioSession, completion: ((_ success: Bool) -> Void)?) {
         OTAudioDeviceManager.setAudioDevice(OTDefaultAudioDevice.sharedInstance(with: audioSession))
         if session == nil {
             session = OTSession(apiKey: apiKey, sessionId: sessionId, delegate: self)
         }
         
-        answerCallCompletion = completion
+        canAnswerCall = completion
         
         var error: OTError?
         hasStartedConnecting = true
@@ -185,8 +185,8 @@ extension SpeakerboxCall: OTSessionDelegate {
         print(#function)
         
         hasConnected = true
-        startCallCompletion?(true)
-        answerCallCompletion?(true)
+        canStartCall?(true)
+        canAnswerCall?(true)
     }
     
     func sessionDidDisconnect(_ session: OTSession) {
@@ -205,8 +205,8 @@ extension SpeakerboxCall: OTSessionDelegate {
         print(#function, error)
         
         hasConnected = false
-        startCallCompletion?(false)
-        answerCallCompletion?(false)
+        canStartCall?(false)
+        canAnswerCall?(false)
     }
     
     func session(_ session: OTSession, streamCreated stream: OTStream) {

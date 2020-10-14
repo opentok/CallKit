@@ -128,7 +128,7 @@ class ViewController: UIViewController {
                 callButton.setTitleColor(.red, for: .normal)
             }
             
-            if let action = notification.userInfo?["action"] as? String, action == SpeakerboxCallManager.CallAction.end.rawValue {
+            if let action = notification.userInfo?["action"] as? String, action == SpeakerboxCallManager.Call.end.rawValue {
                 callButton.setTitle(makeACallText, for: .normal)
                 callButton.setTitleColor(.white, for: .normal)
                 callButton.isEnabled = true
