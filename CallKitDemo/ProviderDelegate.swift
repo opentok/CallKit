@@ -213,10 +213,13 @@ final class ProviderDelegate: NSObject, CXProviderDelegate {
         }
         
         // Start call audio media, now that the audio session has been activated after having its priority boosted.
-        outgoingCall?.startCall(withAudioSession: audioSession) { success in
+        outgoingCall?.startCall(withAudioSession: audioSession) { [weak self] success in
+            guard let outgoingCall = self?.outgoingCall else { return }
             if success {
-                self.callManager.addCall(self.outgoingCall!)
-                self.outgoingCall?.startAudio()
+                self?.callManager.addCall(outgoingCall)
+                self?.outgoingCall?.startAudio()
+            } else {
+                self?.callManager.end(call: outgoingCall)
             }
         }
         

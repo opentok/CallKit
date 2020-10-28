@@ -121,12 +121,23 @@ class ViewController: UIViewController {
         if (appdelegate.callManager.calls.count > 0)
         {
             let call = appdelegate.callManager.calls[0]
-            if (call.isOnHold)
-            {
+            if call.isOnHold {
                 callButton.setTitle(unholdCallText, for: .normal)
-            } else if((call.session) != nil) {
+            } else if call.session != nil {
                 callButton.setTitle(endCallText, for: .normal)
                 callButton.setTitleColor(.red, for: .normal)
+            }
+            
+            if let action = notification.userInfo?["action"] as? String, action == SpeakerboxCallManager.Call.end.rawValue {
+                callButton.setTitle(makeACallText, for: .normal)
+                callButton.setTitleColor(.white, for: .normal)
+                callButton.isEnabled = true
+                simulateCallButton.setTitle(simulateIncomingCallText, for: .normal)
+                simulateCallButton.setTitleColor(.white, for: .normal)
+                simulateCallButton.isEnabled = true
+                simulateCallButton2.setTitle(simulateIncomingCallThreeSecondsText, for: .normal)
+                simulateCallButton2.setTitleColor(.white, for: .normal)
+                simulateCallButton2.isEnabled = true
             }
         }
     }

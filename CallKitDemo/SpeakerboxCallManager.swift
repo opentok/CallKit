@@ -11,6 +11,12 @@ import CallKit
 import OpenTok
 
 final class SpeakerboxCallManager: NSObject {
+    
+    enum Call: String {
+        case start = "startCall"
+        case end = "endCall"
+        case hold = "holdCall"
+    }
 
     let callController = CXCallController()
 
@@ -25,7 +31,7 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(startCallAction)
 
-        requestTransaction(transaction, action: "startCall")
+        requestTransaction(transaction, action: Call.start.rawValue)
     }
 
     func end(call: SpeakerboxCall) {
@@ -33,7 +39,7 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(endCallAction)
 
-        requestTransaction(transaction, action: "endCall")
+        requestTransaction(transaction, action: Call.end.rawValue)
     }
 
     func setHeld(call: SpeakerboxCall, onHold: Bool) {
@@ -41,7 +47,7 @@ final class SpeakerboxCallManager: NSObject {
         let transaction = CXTransaction()
         transaction.addAction(setHeldCallAction)
 
-        requestTransaction(transaction, action: "holdCall")
+        requestTransaction(transaction, action: Call.hold.rawValue)
     }
 
     private func requestTransaction(_ transaction: CXTransaction, action: String = "") {
@@ -74,20 +80,20 @@ final class SpeakerboxCallManager: NSObject {
             self?.postCallsChangedNotification()
         }
 
-        postCallsChangedNotification()
+        postCallsChangedNotification(userInfo: ["action": Call.start.rawValue])
     }
 
     func removeCall(_ call: SpeakerboxCall) {
         calls = calls.filter {$0 === call}
-        postCallsChangedNotification()
+        postCallsChangedNotification(userInfo: ["action": Call.end.rawValue])
     }
 
     func removeAllCalls() {
         calls.removeAll()
-        postCallsChangedNotification()
+        postCallsChangedNotification(userInfo: ["action": Call.end.rawValue])
     }
 
-    private func postCallsChangedNotification() {
-        NotificationCenter.default.post(name: type(of: self).CallsChangedNotification, object: self)
+    private func postCallsChangedNotification(userInfo: [String: Any]? = nil) {
+        NotificationCenter.default.post(name: type(of: self).CallsChangedNotification, object: self, userInfo: userInfo)
     }
 }
